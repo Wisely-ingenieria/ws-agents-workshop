@@ -1,1 +1,1 @@
-from .openai import generate_text, generate_embeddings, count_tokens
+from .openai import generate_text, generate_text_with_function_call, generate_embeddings, count_tokens, gpt35_model, gpt35_16k_model, gpt4_model
