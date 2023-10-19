@@ -41,7 +41,7 @@ class ListDirectory(Tool):
             tree = get_tree(path, depth)
             tree_string = f"Here is the directory:\n{print_tree(tree)}"
 
-            tokens_count = count_tokens(tree)
+            tokens_count = count_tokens(tree_string)
             if tokens_count > MAX_TOKENS:
                 return "The string containing the list of files and directories is too large, try different depth or another path."
 
@@ -58,13 +58,13 @@ def print_tree(tree, indent='', is_last=False):
         if is_last:
             prefix = '    ' # four spaces
         else:
-            prefix = '│   ' # vertical line followed by three spaces
+            prefix = '|   ' # vertical line followed by three spaces
         if i == len(keys) - 1: # if it's the last item
-            tree_string += f'{indent}└── {key}\n'
+            tree_string += f'{indent}-- {key}\n'
             next_indent = indent + prefix
             tree_string += print_tree(value, next_indent, is_last=True) if isinstance(value, dict) else ''
         else:
-            tree_string += f'{indent}├── {key}\n'
+            tree_string += f'{indent}-- {key}\n'
             next_indent = indent + prefix
             tree_string += print_tree(value, next_indent, is_last=False) if isinstance(value, dict) else ''
     return tree_string

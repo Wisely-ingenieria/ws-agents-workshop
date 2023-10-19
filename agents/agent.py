@@ -42,7 +42,7 @@ class Agent:
     def get_tools_schema_str(self):
         return json.dumps(self.get_tools_schema())
     
-    def execute_chain_of_thought(self, goal: str, max_iterations: int=8):
+    def execute_chain_of_thought(self, goal: str, max_iterations: int=3):
         start_time = time.time()
         self.memory.add_to_memory("user", goal)
         self.relevant_memories = self.memory.get_relevant_memories(goal)
@@ -111,7 +111,7 @@ class Agent:
                 args_dict = json.loads(args_dict)
             except Exception as e:
                 return f"ERROR: Unable to parse tool arguments from action input: {e}"
-        
+
         tool = None
         for t in self.tools:
             if t.func.__name__ == func_name:
@@ -128,7 +128,7 @@ class Agent:
         return result
 
     def final_answer(self):
-        system_message = f"{SYSTEM_MESSAGE}\n{FINAL_ANSWER_INSTRUCTIONS}"
+        system_message = {"role": "system", "content": f"{SYSTEM_MESSAGE}\n{FINAL_ANSWER_INSTRUCTIONS}"}        
         prompt = f"[HISTORY]\nHere is the conversation history between you and the user:\n{self.relevant_memories}\n\n"  
         prompt += f"[GOAL]\n{self.goal}\n\n[SCRATCHPAD]\n{self.scratchpad}\nFinal Answer:"
         result = generate_text(prompt, model=gpt4_model, messages=[system_message])

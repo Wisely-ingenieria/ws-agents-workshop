@@ -24,7 +24,7 @@ class RelevantMemories:
             f"Adding memory item {len(self.memory)} with {memory_item['token_count']} tokens. "
             f"Total memory tokens: {total_memory_tokens}"
         )
-                
+
     def get_relevant_memories(self, query, max_tokens = 2000, sim_k = 0.8, rec_k = 0.25):
         total_memory_tokens = sum([memory_item["token_count"] for memory_item in self.memory])
         if total_memory_tokens < max_tokens:

@@ -4,8 +4,8 @@ from numpy import dot
 from numpy.linalg import norm
 
 def vector_similarity(v1, v2):
-        cos_sim = dot(v1, v2)/(norm(v1)*norm(v2))
-        return cos_sim
+    cos_sim = dot(v1, v2)/(norm(v1)*norm(v2))
+    return cos_sim
 
 class Logger:
     def __init__(self, log_file=None, log_dir='./logs'):
@@ -20,7 +20,8 @@ class Logger:
 
     def _write_log(self, level, msg, verbose):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_entry = f"{timestamp} [{level}] {msg}\n"
+        cleaned_msg = msg.encode('utf-8', errors='replace').decode('utf-8')
+        log_entry = f"{timestamp} [{level}] {cleaned_msg}\n"
         with open(self.log_file, "a") as f:
             f.write(log_entry)
         if verbose:
