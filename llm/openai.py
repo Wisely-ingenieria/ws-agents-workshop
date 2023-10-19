@@ -44,6 +44,7 @@ def generate_text(prompt, model=gpt35_model, messages=[], max_tokens=200, temper
     _log_message = "\n\n============================ RESPONSE ============================\n"
     _log_message += f"{response}\n"
     logger.info(_log_message)
+    
     return response["choices"][0]["message"]["content"]
 
 @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
@@ -52,9 +53,15 @@ def generate_text_with_function_call(prompt, model=gpt35_model, messages=[], fun
     _messages.extend(messages)
     _messages.append({"role": "user", "content": prompt})
 
-    _log_message = "\n\n============================ PROMPT ============================\n"
+    _log_message = "\n\n============================ FUNCTION CALL ============================\n"
+    _log_message += "Functions:\n"
+    for function in functions:
+        _log_message += f"{function}\n"
+    
+    _log_message += "Messages:\n"
     for message in _messages:
         _log_message += f"{message['role']}: {message['content']}\n"
+        
     logger.info(_log_message)
 
     response = openai.ChatCompletion.create(
@@ -72,7 +79,12 @@ def generate_text_with_function_call(prompt, model=gpt35_model, messages=[], fun
     _log_message = "\n\n============================ RESPONSE ============================\n"
     _log_message += f"{response}\n"
     logger.info(_log_message)
-    return response["choices"][0]["message"]["function_call"]
+    
+    if "function_call" in response["choices"][0]["message"]:
+        return response["choices"][0]["message"]["function_call"]
+    else:
+        return None
+    
 
 @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
 def generate_embeddings(text):

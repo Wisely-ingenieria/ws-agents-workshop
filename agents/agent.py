@@ -48,14 +48,17 @@ class Agent:
         self.relevant_memories = self.memory.get_relevant_memories(goal)
         self.goal = goal
         self.scratchpad = "Goal: " + self.goal
+        self.log.info(f"Goal: {self.goal}", verbose=True)
         final_answer = ""
 
         for iteration in range(max_iterations):
 
             thought = self.think()
+            self.log.info(f"Thought: {thought}", verbose=True)
             self.scratchpad += f"\nThought: {thought}"
             
             chosen_tool = self.select_tool()
+            self.log.info(f"Action: {chosen_tool}", verbose=True)
             self.scratchpad += f"\nAction: {chosen_tool}"
             
             if chosen_tool is None or chosen_tool.get("name","") == 'final_answer':
@@ -64,6 +67,7 @@ class Agent:
                 break
 
             observation = self.act(chosen_tool)
+            self.log.info(f"Observation: {observation}", verbose=True)
             self.scratchpad += f"\nObservation: {observation}"
 
         else:
@@ -75,26 +79,23 @@ class Agent:
 
         minutes, seconds = divmod(time_taken, 60)
         log_str = f"Time Spent:\n{int(minutes)} minutes and {seconds:.2f} seconds\n"
+        self.log.info(f"Final Answer: {final_answer}", verbose=True)
         self.log.info(log_str)
 
         return final_answer
 
     def think(self):
-        self.log.info(f"Thinking...")
         system_message = {"role": "system", "content": f"{SYSTEM_MESSAGE}\n{THINK_INSTRUCTIONS}"} 
         prompt = f"[HISTORY]\nHere is the conversation history between you and the user:\n{self.relevant_memories}\n\n"
         prompt += f"[TOOLS]\n{self.get_tools_schema()}\n\n[GOAL]\n{self.goal}\n\n[SCRATCHPAD]\n{self.scratchpad}\nThought:"
-        result = generate_text(prompt, model=gpt4_model, messages=[system_message], stop_string=["Action:", "Final Answer:"])
-        self.log.info(f"Thought: {result}")
+        result = generate_text(prompt, model=gpt4_model, messages=[system_message], stop=["Action:", "Final Answer:"])
         return result
 
     def select_tool(self):
-        self.log.info(f"Selecting tool...")
         functions = self.get_tools_schema()
         prompt = f"[HISTORY]\nHere is the conversation history between you and the user:\n{self.relevant_memories}\n\n"  
         prompt += f"[SCRATCHPAD]\n{self.scratchpad}"
         result = generate_text_with_function_call(prompt, model=gpt4_model, functions=functions)
-        self.log.info(f"Selected Tool: {result}")
         return result
 
     def act(self, input_json):
@@ -120,17 +121,15 @@ class Agent:
             return f"ERROR: No tool found with func_name '{func_name}'"
         
         try:
-            result = tool.execute(**args_dict).get("return_string", "")
+            result = tool.execute(**args_dict)
         except Exception as e:
             return f"ERROR: Failed executing {func_name}: {e}"
 
         return result
 
     def final_answer(self):
-        self.log.info(f"Final Answer...")
         system_message = f"{SYSTEM_MESSAGE}\n{FINAL_ANSWER_INSTRUCTIONS}"
         prompt = f"[HISTORY]\nHere is the conversation history between you and the user:\n{self.relevant_memories}\n\n"  
         prompt += f"[GOAL]\n{self.goal}\n\n[SCRATCHPAD]\n{self.scratchpad}\nFinal Answer:"
         result = generate_text(prompt, model=gpt4_model, messages=[system_message])
-        self.log.info(f"Final Answer: {result}")
         return result
