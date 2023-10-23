@@ -18,7 +18,7 @@ Final Answer: the final answer to the original input question.
 """
 
 THINK_INSTRUCTIONS = """You are currently in the 'Thought' Step. 
-Based on the thought process in the [SCRATCHPAD], think about the steps to resolve the Goal, consider the available [TOOLS]. Explain your reasoning and declare the tool to use at the end."""
+Based on the thought process in the [SCRATCHPAD], think about the steps to resolve the Goal, consider the available [TOOLS]. Explain your reasoning and declare the tool to use at the end. Answer in one or two sentences."""
 
 FINAL_ANSWER_INSTRUCTIONS = """You are currently in the 'Final Answer' Step.
 Based only in the thought process and results in the [SCRATCHPAD], create a highly detailed and accurate answer to solve the Goal. You can use Markdown format. Be clear and concise."""
@@ -42,7 +42,7 @@ class Agent:
     def get_tools_schema_str(self):
         return json.dumps(self.get_tools_schema())
     
-    def execute_chain_of_thought(self, goal: str, max_iterations: int=3):
+    def execute_chain_of_thought(self, goal: str, max_iterations: int=5):
         start_time = time.time()
         self.memory.add_to_memory("user", goal)
         self.relevant_memories = self.memory.get_relevant_memories(goal)
@@ -131,5 +131,5 @@ class Agent:
         system_message = {"role": "system", "content": f"{SYSTEM_MESSAGE}\n{FINAL_ANSWER_INSTRUCTIONS}"}        
         prompt = f"[HISTORY]\nHere is the conversation history between you and the user:\n{self.relevant_memories}\n\n"  
         prompt += f"[GOAL]\n{self.goal}\n\n[SCRATCHPAD]\n{self.scratchpad}\nFinal Answer:"
-        result = generate_text(prompt, model=gpt4_model, messages=[system_message])
+        result = generate_text(prompt, model=gpt35_16k_model, messages=[system_message])
         return result

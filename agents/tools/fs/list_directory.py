@@ -9,17 +9,17 @@ class ListDirectory(Tool):
         super().__init__(
             name="list_directory",
             func=self.list_directory,
-            description="List the contents of the specified directory and its subdirectories. Default = './'",
+            description="List the contents of the specified directory and its subdirectories. Default = './data'",
             arguments=[
-                Parameter("path", "The path of the directory to list. Must start with './'", str, required=False),
+                Parameter("path", "The path of the directory to list. Must start with './data'", str, required=False),
                 Parameter("depth", "The depth of subdirectories to list.", int, required=False)        
             ]
         )
 
-    def list_directory(self, path="./", depth=1):
+    def list_directory(self, path="./data", depth=1):
         try:
-            if not path.startswith("./"):
-                return "Invalid path. Path must start with './'"
+            if not path.startswith("./data"):
+                return "Invalid path. Path must start with './data'"
 
             if not os.path.exists(path):
                 return "Path does not exist"

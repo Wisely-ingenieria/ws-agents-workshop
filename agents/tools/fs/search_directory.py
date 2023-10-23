@@ -26,9 +26,9 @@ class SearchDirectory(Tool):
             except re.error:
                 return "ERROR: Invalid regular expression"
             
-        # Create a list of all the filepaths inside the ./ directory
+        # Create a list of all the filepaths inside the ./data directory
         matches = []
-        for root, dirnames, filenames in os.walk("./"):
+        for root, dirnames, filenames in os.walk("./data"):
             for filename in filenames:
                 # Append the filepath to the list of matches. Change \ for /
                 matches.append(os.path.join(root, filename).replace("\\", "/"))

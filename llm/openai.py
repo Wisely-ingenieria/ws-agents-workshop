@@ -21,7 +21,7 @@ gpt35_16k_model = os.getenv("OPENAI_GPT35_16K_MODEL")
 gpt4_model = os.getenv("OPENAI_GPT4_MODEL")
 
 @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
-def generate_text(prompt, model=gpt35_model, messages=[], max_tokens=200, temperature=1.0, top_p=1.0, frequency_penalty=0.0, presence_penalty=0.0, stop=None):
+def generate_text(prompt, model=gpt35_model, messages=[], max_tokens=-1, temperature=1.0, top_p=1.0, frequency_penalty=0.0, presence_penalty=0.0, stop=None):
     _messages = []
     _messages.extend(messages)
     _messages.append({"role": "user", "content": prompt})
@@ -30,6 +30,9 @@ def generate_text(prompt, model=gpt35_model, messages=[], max_tokens=200, temper
     for message in _messages:
         _log_message += f"{message['role']}: {message['content']}\n"
     logger.info(_log_message)
+    
+    if max_tokens == -1:
+        max_tokens = None
         
     response = openai.ChatCompletion.create(
         model=model,
@@ -48,7 +51,7 @@ def generate_text(prompt, model=gpt35_model, messages=[], max_tokens=200, temper
     return response["choices"][0]["message"]["content"]
 
 @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
-def generate_text_with_function_call(prompt, model=gpt35_model, messages=[], functions=[], max_tokens=200, temperature=1.0, top_p=1.0, frequency_penalty=0.0, presence_penalty=0.0, stop=None, function_call='auto'):
+def generate_text_with_function_call(prompt, model=gpt35_model, messages=[], functions=[], max_tokens=-1, temperature=1.0, top_p=1.0, frequency_penalty=0.0, presence_penalty=0.0, stop=None, function_call='auto'):
     _messages = []
     _messages.extend(messages)
     _messages.append({"role": "user", "content": prompt})
@@ -63,6 +66,9 @@ def generate_text_with_function_call(prompt, model=gpt35_model, messages=[], fun
         _log_message += f"{message['role']}: {message['content']}\n"
         
     logger.info(_log_message)
+    
+    if max_tokens == -1:
+        max_tokens = None
 
     response = openai.ChatCompletion.create(
         model=model,

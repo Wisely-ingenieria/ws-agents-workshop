@@ -20,12 +20,11 @@ class Logger:
 
     def _write_log(self, level, msg, verbose):
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        cleaned_msg = msg.encode('utf-8', errors='replace').decode('utf-8')
-        log_entry = f"{timestamp} [{level}] {cleaned_msg}\n"
+        cleaned_msg = msg.encode('utf-8').decode('ascii', 'ignore')
         with open(self.log_file, "a") as f:
-            f.write(log_entry)
+            f.write(f"{timestamp} [{level}] {cleaned_msg}\n")
         if verbose:
-            print(log_entry.strip())
+            print(f"{timestamp} [{level}] {msg}\n".strip())
 
     def info(self, msg, verbose=False):
         self._write_log("INFO", msg, verbose)
