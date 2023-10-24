@@ -21,7 +21,7 @@ if "agent" not in st.session_state:
         ]
     )
 
-st.title("🤖 Wisely Multi Tool Agent Example")
+st.title("🤖 Multi Tool Agent Example")
 
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
