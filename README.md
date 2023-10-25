@@ -14,6 +14,7 @@ Las variables de entorno en el archivo `.env` estan referenciados en `.env.refer
 | `OPENAI_GPT35_MODEL` | El nombre del modelo GPT-3.5 de OpenAI utilizado para generar texto. |
 | `OPENAI_GPT35_16K_MODEL` | El nombre del modelo GPT-3.5 16K de OpenAI utilizado para generar texto. |
 | `OPENAI_GPT4_MODEL` | El nombre del modelo GPT-4 de OpenAI utilizado para generar texto. |
+| `GITHUB_PAT` | Personal Access Token (PAT) para acceder a la API de GitHub |
 
 ## Requisitos
 
