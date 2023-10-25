@@ -1,4 +1,4 @@
-# Prompting Workshop
+# Agents Workshop
 
 Este repositorio contiene los scripts utilizados en el taller de Agentes.
 
