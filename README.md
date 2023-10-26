@@ -26,3 +26,6 @@ Para ejecutar los scripts de este proyecto, necesitarás:
 - Instalar las bibliotecas de Python 
 
     `#! pip install -r requirements.txt`
+
+## Link a presentación
+https://www.canva.com/design/DAFx_sBuib8/9qbHOUmTSaRq6YDwJDn08A/view
