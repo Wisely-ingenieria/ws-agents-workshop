@@ -25,4 +25,4 @@ Para ejecutar los scripts de este proyecto, necesitarás:
 - Utilizar Python 3.10+.
 - Instalar las bibliotecas de Python 
 
-    `pip install requirement.txt`
+    `#! pip install -r requirements.txt`

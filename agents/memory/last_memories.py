@@ -11,6 +11,9 @@ class LastMemories:
             "content": content
         }
         self.memory.append(memory_item)
+    
+    def clean_memory(self):
+        self.memory = []
         
     def get_last_memories(self, n=5):
         if n > len(self.memory):
