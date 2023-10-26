@@ -3,7 +3,6 @@ from datetime import datetime
 class LastMemories:
     def __init__(self):            
         self.memory = []
-             
 
     def add_to_memory(self, role, content):
         memory_item = {

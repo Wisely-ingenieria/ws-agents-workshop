@@ -23,7 +23,8 @@ gpt4_model = os.getenv("OPENAI_GPT4_MODEL")
 @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(3))
 def generate_text(prompt, model=gpt35_model, messages=[], max_tokens=-1, temperature=1.0, top_p=1.0, frequency_penalty=0.0, presence_penalty=0.0, stop=None):
     _messages = []
-    _messages.extend(messages)
+    for msg in messages:
+        _messages.append({"role": msg.get("role",""), "content": msg.get("content","")})
     _messages.append({"role": "user", "content": prompt})
     
     _log_message = "\n\n============================ PROMPT ============================\n"
